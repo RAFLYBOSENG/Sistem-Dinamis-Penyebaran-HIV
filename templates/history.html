@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>🕒 Riwayat Simulasi - Web3 Enhanced</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #f2fcfe 0%, #1c92d2 100%);
+      min-height: 100vh;
+    }
+    .glass {
+      background: rgba(255,255,255,0.93);
+      box-shadow: 0 4px 24px rgba(44, 62, 80, 0.11), 0 1.5px 2.5px 0 rgba(44, 62, 80, 0.06);
+      border-radius: 1.15rem;
+      border: 1px solid rgba(160, 209, 255, 0.11);
+      backdrop-filter: blur(7px);
+    }
+    .web3-btn {
+      background-color: #1b6ebe;
+      color: #fff;
+      box-shadow: 0 2px 16px #2496ec33;
+      border-radius: 0.7rem;
+      font-weight: 600;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .web3-btn:hover {
+      background: #2691db;
+      color: #fff;
+      box-shadow: 0 2px 30px #35b5f133;
+    }
+    .table-title {
+      color: #1b6ebe;
+      font-weight: 700;
+      margin-bottom: 1.6rem;
+      letter-spacing: .03em;
+    }
+    .history-icon {
+      color: #1c92d2;
+      margin-right: .65em;
+      font-size: 1.3em;
+      vertical-align: middle;
+      opacity: 0.83;
+    }
+    @media (max-width: 900px) {
+      .glass {
+        padding: 1.2rem !important;
+      }
+      .table-responsive {
+        font-size: .98em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="row justify-content-center align-items-center animate__animated animate__fadeInDown">
+      <div class="col-12 col-md-11 col-lg-9">
+        <div class="glass p-4 px-md-5 animate__animated animate__fadeInDown mb-4">
+          <div class="mb-4 text-center">
+            <i class="fa-solid fa-clock-rotate-left fa-2x history-icon"></i>
+            <span class="fs-3 fw-bold table-title">🕒 Riwayat Simulasi</span>
+            <div class="badge bg-info bg-gradient text-dark mt-2">Web3 Enhanced 🚀</div>
+          </div>
+
+          {% if not table or table|length == 0 %}
+            <div class="alert alert-info">
+              <i class="fa-solid fa-circle-info"></i> Belum ada riwayat simulasi.
+            </div>
+          {% else %}
+          <div class="table-responsive animate__animated animate__fadeInUp">
+            <table class="table table-striped table-bordered align-middle mb-0">
+              <thead class="table-dark">
+                <tr>
+                  <th>No</th>
+                  <th>Waktu (UTC)</th>
+                  <th>β</th>
+                  <th>γ</th>
+                  <th>N</th>
+                  <th>I₀</th>
+                  <th>Sinyal</th>
+                  <th>Puncak I</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in table %}
+                <tr>
+                  <td class="text-center">{{ loop.index }}</td>
+                  <td>
+                    <span class="badge bg-light text-dark">
+                      {% if row.timestamp_readable %} {{ row.timestamp_readable }}
+                      {% else %} - {% endif %}
+                    </span>
+                  </td>
+                  <td>{{ row.beta }}</td>
+                  <td>{{ row.gamma }}</td>
+                  <td>{{ row.N }}</td>
+                  <td>{{ row.I0 }}</td>
+                  <td>
+                    <span class="badge bg-primary bg-gradient">
+                      {{ row.signal|capitalize }}
+                    </span>
+                  </td>
+                  <td><span class="text-success fw-semibold">{{ row.peak_I }}</span></td>
+                  <td class="d-flex gap-2">
+                    <a
+                      class="btn btn-sm btn-info"
+                      href="{{ url_for('history_detail', entry_id=row.id) }}"
+                      title="Lihat detail"
+                    ><i class="fa-solid fa-eye"></i></a>
+                    <a
+                      class="btn btn-sm btn-secondary"
+                      href="{{ url_for('rerun', entry_id=row.id) }}"
+                      title="Ulangi simulasi ini"
+                    ><i class="fa-solid fa-rotate-left"></i></a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% endif %}
+          <a href="/" class="web3-btn btn mt-4 px-4 py-2">
+            <i class="fa-solid fa-house"></i> Kembali ke Halaman Utama
+          </a>
+        </div>
+        <div id="web3-tip" class="text-center animate__animated animate__fadeInUp">
+          <span class="badge bg-gradient px-3 text-dark" style="background: linear-gradient(90deg,#a0eaf8 20%,#f3f793 90%);">
+            <i class="fa-solid fa-lightbulb"></i>
+            Klik detail pada tabel untuk melihat atau mengulangi simulasi, atau kembali ke beranda untuk menjalankan simulasi baru!
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

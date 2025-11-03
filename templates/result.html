@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hasil Simulasi - Web3 Enhanced</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #f2fcfe 0%, #1c92d2 100%);
+      min-height: 100vh;
+    }
+    .glass {
+      background: rgba(255,255,255,0.92);
+      box-shadow: 0 4px 24px rgba(44, 62, 80, 0.13), 0 1.5px 2.5px 0 rgba(44, 62, 80, 0.06);
+      border-radius: 1.15rem;
+      border: 1px solid rgba(160, 209, 255, 0.04);
+      backdrop-filter: blur(7px);
+    }
+    .web3-btn {
+      background-color: #1b6ebe;
+      color: #fff;
+      box-shadow: 0 2px 16px #2496ec33;
+      border-radius: 0.7rem;
+      font-weight: 600;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .web3-btn:hover {
+      background: #2691db;
+      color: #fff;
+      box-shadow: 0 2px 30px #35b5f133;
+    }
+    .web3-card-title {
+      color: #1b6ebe;
+      font-weight: 700;
+    }
+    .param-kv {
+      background: #e5f6fb4c;
+      padding: 1rem 1.3rem;
+      border-radius: 0.8rem;
+      margin-bottom: 1em;
+      font-size: 1.07em;
+      line-height: 2.1em;
+    }
+    .signal-chip {
+      display: inline-block;
+      background: #1b6ebe;
+      color: #fff;
+      font-size: 0.98em;
+      border-radius: 0.7em;
+      padding: 0.25em 0.75em 0.25em 0.55em;
+      margin-left: 0.3em;
+      font-weight: 500;
+      box-shadow: 0 1px 6px #0001;
+    }
+    @media (max-width: 900px) {
+      .glass {
+        padding: 1.2rem !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-5 web3-enter">
+    <div class="row justify-content-center align-items-center">
+      <div class="col-12 col-md-11 col-lg-8">
+        <div class="glass p-4 px-md-5 mb-4 animate__animated animate__fadeInDown">
+          <div class="text-center mb-3">
+            <i class="fa-solid fa-dna fa-2x text-primary mb-2"></i>
+            <h2 class="web3-card-title mb-1">📈 Hasil Simulasi Model SIR</h2>
+            <span class="badge bg-info text-dark mb-2">Web3 Enhanced Output 🌐</span>
+          </div>
+          <div class="param-kv mb-3">
+            <b>β</b>: {{beta}},
+            <b>γ</b>: {{gamma}},
+            <b>N</b>: {{N}},
+            <b>I₀</b>: {{I0}},
+            <b>R₀</b>: {{R0}},
+            <b>Input</b>: 
+            <span class="signal-chip">
+              <i class="fa-solid fa-wave-square"></i> {{ signal_type|capitalize }}
+            </span>
+          </div>
+          <div class="mb-4" style="overflow-x:auto;">
+            {{ plot_html|safe }}
+          </div>
+          <div class="d-flex justify-content-between mt-4">
+            <a href="/" class="btn web3-btn px-4">
+              <i class="fa-solid fa-arrow-left"></i> Kembali ke Awal
+            </a>
+            <a href="/history" class="btn btn-outline-secondary ms-2">
+              <i class="fa-solid fa-clock-rotate-left"></i> Lihat Riwayat
+            </a>
+          </div>
+        </div>
+        <div id="web3SimTip" class="text-center animate__animated animate__fadeInUp">
+          <span class="badge bg-gradient px-3 text-dark" style="background: linear-gradient(90deg,#a0eaf8 20%,#f3f793 90%);">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            Simulasi selesai! Scroll ke bawah untuk interpretasi atau jalankan ulang.
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>🔎 Detail Simulasi - Web3 Enhanced</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #f2fcfe 0%, #1c92d2 100%);
+      min-height: 100vh;
+    }
+    .glass {
+      background: rgba(255,255,255,0.94);
+      box-shadow: 0 4px 28px rgba(44, 62, 80, 0.13), 0 1.5px 2.5px 0 rgba(44, 62, 80, 0.08);
+      border-radius: 1.15rem;
+      border: 1px solid rgba(160, 209, 255, 0.08);
+      backdrop-filter: blur(7px);
+      /* for aesthetic padding on mobile */
+      padding: 2rem 2.5rem;
+    }
+    @media (max-width: 900px) {
+      .glass {
+        padding: 1rem !important;
+      }
+    }
+    .web3-btn {
+      background-color: #1b6ebe;
+      color: #fff;
+      box-shadow: 0 2px 16px #2496ec33;
+      border-radius: 0.7rem !important;
+      font-weight: 600;
+      transition: background 0.2s, box-shadow 0.2s;
+      border: none;
+    }
+    .web3-btn:hover, .web3-btn:focus {
+      background: #2691db;
+      color: #fff;
+      box-shadow: 0 2px 30px #35b5f133;
+    }
+    .section-title {
+      color: #1b6ebe;
+      font-weight: 700;
+      margin-bottom: 0.7em;
+      letter-spacing: .01em;
+    }
+    .web3-chip {
+      display: inline-block;
+      background: #1c92d2;
+      color: #fff;
+      font-size: 0.97em;
+      padding: 0.25em 0.73em;
+      border-radius: 0.7em;
+      margin: 0 .15em 0 .12em;
+      font-weight: 500;
+      vertical-align: middle;
+    }
+    .sim-kv {
+      background: #e5f6fb4c;
+      padding: 1rem 1.25rem;
+      border-radius: 0.8rem;
+      margin-bottom: 1em;
+      font-size: 1.07em;
+      line-height: 2.1em;
+    }
+    pre.summary {
+      white-space: pre-wrap;
+      background: #f5f7ff;
+      border-radius: .58em;
+      border: 1px solid #ccebfa42;
+      font-size: 1.08em;
+      padding: 1.11em 1em 1.05em 1em;
+      margin-bottom: 0;
+    }
+    .plot-container {
+      width: 100%;
+      overflow-x: auto;
+      background: #f4fcff;
+      border-radius: .9em;
+      border: 1px solid #ccebfa29;
+      padding: 1em .6em;
+      box-shadow: 0 0.2em 1.8em #eaf9fff9;
+      margin-bottom: 0.7em;
+    }
+    .detail-icon {
+      color: #1c92d2;
+      margin-right: .7em;
+      font-size: 1.5em;
+      opacity: 0.82;
+      vertical-align: middle;
+    }
+    .web3-divider {
+      height: 2px;
+      background: linear-gradient(to right, #1b6ebe, #72efff, #2481bc);
+      opacity: 0.14;
+      border-radius: 1.5px;
+      margin: 2rem 0 1.2rem 0;
+    }
+    .action-row {
+      gap: 1.2em;
+      margin: 1.1em 0 0.1em 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-5 mb-5">
+    <div class="row justify-content-center web3-enter">
+      <div class="col-12 col-md-10 col-lg-8">
+        <div class="glass animate__animated animate__fadeInDown mb-4">
+          <div class="mb-3 mt-1 text-center">
+            <i class="fa-solid fa-microscope detail-icon"></i>
+            <span class="section-title fs-3">Detail Simulasi <span class="web3-chip">Web3</span></span>
+            <div class="badge bg-info bg-gradient text-dark mt-2">Enhanced 🚀</div>
+          </div>
+
+          <div class="web3-divider"></div>
+          <div>
+            <h5 class="section-title fs-5 mb-2">Informasi Simulasi</h5>
+            <div class="sim-kv mb-3">
+              <div><b>ID:</b> <span class="web3-chip">{{ entry.id }}</span></div>
+              <div><b>Waktu (UTC):</b> <span class="web3-chip">{{ entry.timestamp_readable or entry.timestamp }}</span></div>
+              <div>
+                <b>&beta;:</b> <span class="web3-chip">{{ entry.beta }}</span>
+                <b>&gamma;:</b> <span class="web3-chip">{{ entry.gamma }}</span>
+                <b>N:</b> <span class="web3-chip">{{ entry.N }}</span>
+              </div>
+              <div>
+                <b>I&#8320;:</b> <span class="web3-chip">{{ entry.I0 }}</span>
+                <b>R&#8320;:</b> <span class="web3-chip">{{ entry.R0 }}</span>
+                <b>Hari:</b> <span class="web3-chip">{{ entry.days }}</span>
+              </div>
+              <div>
+                <b>Sinyal:</b> <span class="web3-chip">{{ entry.signal|capitalize }}</span>
+                <b>amp:</b> <span class="web3-chip">{{ entry.amp }}</span>
+                <b>freq:</b> <span class="web3-chip">{{ entry.freq }}</span>
+                <b>step_time:</b> <span class="web3-chip">{{ entry.step_time }}</span>
+              </div>
+            </div>
+            <div class="d-flex flex-wrap action-row">
+              <a class="web3-btn btn px-4 mb-1" href="{{ url_for('rerun', entry_id=entry.id) }}">
+                <i class="fa-solid fa-rotate-left"></i> Ulangi Simulasi
+              </a>
+              <a class="btn btn-secondary px-4 mb-1" href="{{ url_for('history') }}">
+                <i class="fa-solid fa-list"></i> Kembali ke Riwayat
+              </a>
+            </div>
+          </div>
+
+          <div class="web3-divider"></div>
+          <h5 class="section-title fs-5 mb-2"><i class="fa-solid fa-chart-line me-1"></i> Grafik Simulasi</h5>
+          <div class="plot-container mb-3 animate__animated animate__fadeInUp">
+            {{ plot_html|safe }}
+          </div>
+
+          <div class="web3-divider"></div>
+          <h5 class="section-title fs-5 mb-2"><i class="fa-solid fa-scroll me-1"></i> Ringkasan &amp; Interpretasi</h5>
+          <pre class="summary">{{ entry.summary }}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

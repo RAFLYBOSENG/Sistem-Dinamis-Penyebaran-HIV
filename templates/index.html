@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Simulasi Dinamik HIV (Model SIR) - Web3 Upgrade</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <!-- Web3 modern & interactive UI enhancement -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #f2fcfe 0%, #1c92d2 100%);
+      min-height: 100vh;
+    }
+    .glass {
+      background: rgba(255,255,255,0.87);
+      box-shadow: 0 4px 32px rgba(44, 62, 80, 0.13), 0 1.5px 2.5px 0 rgba(44, 62, 80, 0.06);
+      border-radius: 1.15rem;
+      border: 1px solid rgba(160, 209, 255, 0.12);
+      backdrop-filter: blur(7px);
+    }
+    .form-floating > label {
+      color: #2481bc;
+    }
+    .web3-enter {
+      animation: fadeInDown 1.1s;
+    }
+    .input-group-text {
+      background: #e5f6fb;
+      border-right: 0;
+      color: #2691db;
+    }
+    .form-control:focus {
+      border-color: #2691db;
+      box-shadow: 0 0 0 0.2rem rgba(38, 145, 219, 0.13);
+    }
+    .web3-btn {
+      background-color: #1b6ebe;
+      color: #fff;
+      box-shadow: 0 2px 16px #2496ec33;
+      border-radius: 0.7rem;
+      font-weight: 600;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .web3-btn:hover {
+      background: #2691db;
+      color: #fff;
+      box-shadow: 0 2px 30px #35b5f133;
+    }
+    .form-web3-divider {
+      height: 2px;
+      background: linear-gradient(to right, #1b6ebe, #72efff, #2481bc);
+      opacity: 0.14;
+      border-radius: 1.5px;
+      margin: 2.5rem 0 1.2rem 0;
+    }
+    .floating-label-hint {
+      font-size: 0.93em;
+      color: #4b6971;
+      opacity: 0.68;
+      margin-top: -1em;
+      margin-bottom: 1.05em;
+    }
+    .signal-icon {
+      color: #1b6ebe;
+      margin-right: 0.5em;
+      font-size: 1.33em;
+      vertical-align: middle;
+      opacity: 0.78;
+    }
+    @media (max-width: 900px) {
+      .glass {
+        padding: 1.2rem !important;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container mt-5">
+  <div class="row justify-content-center align-items-center web3-enter">
+    <div class="col-12 col-md-11 col-lg-8">
+      <div class="glass p-4 px-md-5 mb-4 animate__animated animate__fadeInDown">
+        <div class="text-center mb-4">
+          <i class="fa-solid fa-virus-covid fa-2x text-primary mb-2"></i>
+          <h2 class="fw-bold mb-2" style="color: #2691db;">Simulasi Dinamik HIV (SIR Model)</h2>
+          <span class="badge bg-info text-dark small mb-2">Web3 Enhanced Interactive UI 🚀</span>
+          <div class="floating-label-hint"></div>
+        </div>
+        <form method="POST" id="simulasiForm" autocomplete="off">
+          <div class="row g-3">
+            <div class="col-md-6 form-floating">
+              <input type="number" step="0.001" min="0" name="beta" id="beta" class="form-control" placeholder="0.3"
+                value="{{ prefill.beta if prefill else '0.3' }}" required>
+              <label for="beta">β (Infection rate)</label>
+            </div>
+            <div class="col-md-6 form-floating">
+              <input type="number" step="0.001" min="0" name="gamma" id="gamma" class="form-control" placeholder="0.1"
+                value="{{ prefill.gamma if prefill else '0.1' }}" required>
+              <label for="gamma">γ (Recovery rate)</label>
+            </div>
+          </div>
+          <div class="row g-3 mt-1">
+            <div class="col-md-3 form-floating">
+              <input type="number" min="1" name="N" id="N" class="form-control" placeholder="1000000"
+                value="{{ prefill.N if prefill else '1000000' }}" required>
+              <label for="N">Populasi (N)</label>
+            </div>
+            <div class="col-md-3 form-floating">
+              <input type="number" min="0" name="I0" id="I0" class="form-control" placeholder="10"
+                value="{{ prefill.I0 if prefill else '10' }}" required>
+              <label for="I0">Infected Awal (I₀)</label>
+            </div>
+            <div class="col-md-3 form-floating">
+              <input type="number" min="0" name="R0" id="R0" class="form-control" placeholder="0"
+                value="{{ prefill.R0 if prefill else '0' }}" required>
+              <label for="R0">Recovered Awal (R₀)</label>
+            </div>
+            <div class="col-md-3 form-floating">
+              <input type="number" min="1" name="days" id="days" class="form-control" placeholder="100"
+                value="{{ prefill.days if prefill else '100' }}" required>
+              <label for="days">Lama Simulasi (hari)</label>
+            </div>
+          </div>
+
+          <div class="form-web3-divider"></div>
+          <div class="mb-2 mt-2">
+            <label class="form-label">
+              <i class="fa-solid fa-wave-square signal-icon"></i>
+              Jenis Sinyal Kontrol:
+            </label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fa-solid fa-microchip"></i></span>
+              <select name="signal_type" id="signal_type" class="form-select">
+                <option value="none" {% if prefill and prefill.signal_type=='none' %}selected{% endif %}>Tanpa Sinyal (Steady)</option>
+                <option value="step" {% if prefill and prefill.signal_type=='step' %}selected{% endif %}>Step</option>
+                <option value="impulse" {% if prefill and prefill.signal_type=='impulse' %}selected{% endif %}>Impulse</option>
+                <option value="ramp" {% if prefill and prefill.signal_type=='ramp' %}selected{% endif %}>Ramp</option>
+                <option value="sin" {% if prefill and prefill.signal_type=='sin' %}selected{% endif %}>Sinusoidal</option>
+              </select>
+            </div>
+            <div class="floating-label-hint"></div>
+          </div>
+          <div class="row g-3 mb-1">
+            <div class="col-md-4 form-floating">
+              <input type="number" step="0.01" min="0" name="amp" id="amp" class="form-control" value="0.5" placeholder="0.5">
+              <label for="amp">Amplitude Sinyal (amp)</label>
+            </div>
+            <div class="col-md-4 form-floating">
+              <input type="number" step="0.1" min="0" name="freq" id="freq" class="form-control" value="1.0" placeholder="1.0">
+              <label for="freq">Frekuensi (freq)</label>
+            </div>
+            <div class="col-md-4 form-floating">
+              <input type="number" step="1" min="0" name="step_time" id="step_time" class="form-control" placeholder="(biarkan kosong)">
+              <label for="step_time">Waktu Step (step_time)</label>
+            </div>
+          </div>
+          <div class="row mt-4 gy-2">
+            <div class="col-md-8">
+              <button type="submit" class="web3-btn btn w-100 py-2">
+                <i class="fa-solid fa-play"></i> Jalankan Simulasi
+              </button>
+            </div>
+            <div class="col-md-4">
+              <a href="/history" class="btn btn-secondary w-100 py-2">
+                <i class="fa-solid fa-clock-rotate-left"></i> Lihat Riwayat
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div id="web3Tip" class="text-center animate__animated animate__fadeInUp">
+        <span class="badge bg-gradient px-3 text-dark" style="background: linear-gradient(90deg,#a0eaf8 20%,#f3f793 90%);">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          Navigasikan parameter, lalu jalankan simulasi untuk eksplorasi interaktif!
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  // Prevent accidental form double submission
+  document.getElementById('simulasiForm').onsubmit = function(e) {
+    var btn = this.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
+  };
+  // Dynamic input hints (for better interactive feel)
+  // (Script intentionally left empty; implement hint logic here if needed.)
+</script>
+</body>
+</html>
